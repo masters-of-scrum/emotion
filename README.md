@@ -5,6 +5,7 @@ Implementació del repte proposat per l'empresa Saltó a la HackEPS2022
 
 ## Data sets
 [AffectNet](http://mohammadmahoor.com/affectnet/) -> descartat, triguen 14 dies i són 120 GB de dades
+
 [Kaggle DS](https://www.kaggle.com/code/sagnik1511/face-emotion-recognition-with-efficientnetb2/data)
 
 ## Zenbo sdk
