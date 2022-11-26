@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -22,11 +24,15 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.Arrays;
+import java.util.Date;
+
 public class CameraActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2{
     private static final String TAG="MainActivity";
 
     private Mat mRgba;
     private Mat mGray;
+    private String toShow = "Example string";
     private CameraBridgeViewBase mOpenCvCameraView;
     private BaseLoaderCallback mLoaderCallback =new BaseLoaderCallback(this) {
         @Override
@@ -67,6 +73,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         setContentView(R.layout.activity_camera);
 
         mOpenCvCameraView=(CameraBridgeViewBase) findViewById(R.id.frame_Surface);
+        mOpenCvCameraView.setCameraIndex(1);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -110,13 +117,25 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
     public void onCameraViewStopped(){
         mRgba.release();
     }
+    @SuppressLint("SetTextI18n")
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame){
-
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
 
-        return mRgba;
+        // PROVES
+        for (int i = 0; i < 5; i++){
+            double[] data = mRgba.get(300, 400+i);
+            data[0] = 255;
+            data[1] = 0;
+            data[2] = 0;
+            mRgba.put(300, 400+i, data);
+        }
 
+        // FICAR EL TEXT QUE VOLGUEM MOSTRAR
+        final TextView helloTextView = (TextView) findViewById(R.id.toShowText);
+        helloTextView.setText(new Date().toString());
+
+        return mRgba;
     }
 
 }

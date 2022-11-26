@@ -25,9 +25,11 @@ package="com.hackeps.mastersofscrum">
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/Theme.MastersOfScrum">
-    <activity android:name=".CameraActivity" />
+    <activity android:name=".CameraActivity"
+        android:screenOrientation="landscape"/>
     <activity android:name=".MainActivity"
-        android:exported="true">
+        android:exported="true"
+        android:screenOrientation="landscape">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
