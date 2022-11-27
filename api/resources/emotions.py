@@ -14,21 +14,7 @@ from flask_restful import Resource
 import cv2
 from prisma.models import Emotion
 from tensorflow.keras.models import model_from_json
-#from app2 import predict
-#import cStringIO as StringIO
 from io import StringIO
-
-class AllowedEmotion(Enum):
-    """
-    Provides a common model to identify allowed emotions
-    """
-    ANGER = 1
-    NEUTRAL = 2
-    HAPPY = 3
-    SAD = 4
-    SURPRISED = 5
-    FEAR = 6
-    DISGUST = 7
 
 class ModelCheck():
     def __init__(self):
@@ -42,21 +28,9 @@ class ModelCheck():
             loaded_model= model_from_json(self.loaded_model_json )
             loaded_model.load_weights(self.modelo_weights_file)
             img =  np.array([float(x) for x in roi.split(',')]).reshape(48, 48)
-        #print(type(roi))
-        #stream = StringIO.StringIO(roi)
-        #img = Image.open(stream)
-        #roi = np.fromstring(roi, dtype=np.uint8)
-        #roi = cv2.resize(roi, (48,48))
-        #print(img.size())
-        #cv2.imshow("image",img)
-        #print(type(roi))
-        #print( roi.shape)
-        #pred = predict(img)
-        #print(pred)
             pred=loaded_model.predict(img[np.newaxis, :,:, np.newaxis])
             text_idx=np.argmax(pred)
             out = self.text_list[text_idx]
-            print(out)
             return out
             
 
@@ -81,8 +55,6 @@ class EmotionsApi(Resource):
         result = self.modelo.get_result_model(body['image'])
 
         return Response(result, mimetype="application/json", status=201)
-
-        #return Response('Bad request', status=400)
 
 
 
