@@ -1,12 +1,12 @@
 package com.hackeps.mastersofscrum;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,11 +19,15 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
+import org.opencv.core.Rect;
+import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -34,22 +38,46 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
     private Mat mGray;
     private String toShow = "Example string";
     private CameraBridgeViewBase mOpenCvCameraView;
+
+    File caseFile;
+    //private facialRecognition facialRecognition;
+
+    private ModelService modelService;
+
     private BaseLoaderCallback mLoaderCallback =new BaseLoaderCallback(this) {
         @Override
         public void onManagerConnected(int status) {
-            switch (status){
-                case LoaderCallbackInterface
-                        .SUCCESS:{
-                    Log.i(TAG,"OpenCv Is loaded");
-                    mOpenCvCameraView.enableView();
-                }
-                default:
-                {
-                    super.onManagerConnected(status);
+            if (status == LoaderCallbackInterface
+                    .SUCCESS) {
+                InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_alt);
+                File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+                caseFile = new File(cascadeDir, "haarcascade_frontalface_alt.xml");
 
+                try {
+                    FileOutputStream fos = new FileOutputStream(caseFile);
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
+
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+                    is.close();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                break;
+
+                CascadeClassifier faceDetector = new CascadeClassifier(caseFile.getAbsolutePath());
+                if (faceDetector.empty()) {
+                    faceDetector = null;
+                } else {
+                    cascadeDir.delete();
+                }
+                modelService = new ModelService(faceDetector);
+                Log.i(TAG, "OpenCv Is loaded");
+                mOpenCvCameraView.enableView();
             }
+            super.onManagerConnected(status);
         }
     };
 
@@ -76,6 +104,16 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         mOpenCvCameraView.setCameraIndex(1);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        /*
+        int inputSize=48;
+        try {
+            facialRecognition = new facialRecognition(getAssets(), CameraActivity.this,
+                    "model.tflite", inputSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+         */
+
 
     }
 
@@ -118,24 +156,28 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         mRgba.release();
     }
     @SuppressLint("SetTextI18n")
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame){
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
 
-        // PROVES
-        for (int i = 0; i < 5; i++){
-            double[] data = mRgba.get(300, 400+i);
-            data[0] = 255;
-            data[1] = 0;
-            data[2] = 0;
-            mRgba.put(300, 400+i, data);
-        }
-
         // FICAR EL TEXT QUE VOLGUEM MOSTRAR
-        final TextView helloTextView = (TextView) findViewById(R.id.toShowText);
-        helloTextView.setText(new Date().toString());
+        final TextView helloTextView = findViewById(R.id.toShowText);
 
-        return mRgba;
+        Rect largest_rect = modelService.detectBiggestFace(mGray);
+        if (largest_rect == null){
+            return mGray;
+        } else {
+            Mat croppedGray = modelService.cropToRect(mGray, largest_rect);
+            Mat croppedRgba = modelService.cropToRect(mRgba, largest_rect);
+            try {
+                String result = modelService.sendCropped(croppedGray);
+                helloTextView.setText(result);
+            } catch (IOException e) {
+                helloTextView.setText("REQUEST FAILED");
+                e.printStackTrace();
+            }
+            return modelService.resizeImageBig(croppedRgba);
+        }
     }
 
 }
