@@ -7,13 +7,13 @@
     <org.opencv.android.JavaCameraView
         android:id="@+id/frame_Surface"
         android:layout_width="match_parent"
-        android:layout_height="350dp" />
+        android:layout_height="200dp" />
 
     <TextView
         android:id="@+id/toShowText"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="350dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="200dp"
         android:gravity="center"/>
 
 </FrameLayout>

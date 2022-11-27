@@ -63,14 +63,14 @@ public class ModelService {
     }
 
     public String sendCropped(Mat input) throws IOException {
-        URL url = new URL("https://9ae2-193-144-12-226.eu.ngrok.io/api/emotions");
+        URL url = new URL("https://e629-193-144-12-226.eu.ngrok.io/api/emotions");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Accept", "application/json");
         connection.setDoOutput(true);
 
-        String jsonInputString = imageToJSON(resizeImage(input));
+        String jsonInputString = imageToCommaSeparatedNumbers(resizeImage(input));
         try(OutputStream os = connection.getOutputStream()) {
             byte[] inputBytes = jsonInputString.getBytes("utf-8");
             os.write(inputBytes, 0, inputBytes.length);
@@ -102,6 +102,23 @@ public class ModelService {
         }
         st.deleteCharAt(st.length()-1);
         st.append("]\"}");
+        return st.toString();
+    }
+
+    private String imageToCommaSeparatedNumbers(Mat input){
+        double[] numbers = new double[input.rows() * input.cols()];
+        for(int i = 0; i < input.rows(); i++){
+            for(int j = 0; j < input.cols(); j++){
+                numbers[i*input.cols()+j] = input.get(i, j)[0];
+            }
+        }
+        StringBuilder st = new StringBuilder("{ \"image\": \"");
+        for (double n : numbers){
+            st.append(n);
+            st.append(",");
+        }
+        st.deleteCharAt(st.length()-1);
+        st.append("\"}");
         return st.toString();
     }
 

@@ -175,6 +175,8 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
             //Mat croppedRgba = modelService.cropToRect(mRgba, largest_rect);
             try {
                 String result = modelService.sendCropped(croppedGray);
+                result = result.replace("\n","");
+                result = result.replace(" ","");
                 helloTextView.setText(result);
             } catch (IOException e) {
                 helloTextView.setText("REQUEST FAILED");
