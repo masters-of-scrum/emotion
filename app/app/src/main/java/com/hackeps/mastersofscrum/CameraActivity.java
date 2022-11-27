@@ -7,12 +7,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -45,6 +48,8 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
     //private facialRecognition facialRecognition;
 
     Date lastPicture;
+
+    boolean takePic = false;
 
     private ModelService modelService;
 
@@ -104,6 +109,14 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         }
 
         setContentView(R.layout.activity_camera);
+
+        Button camera_button=findViewById(R.id.detect_button);
+        camera_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePic = true;
+            }
+        });
 
         mOpenCvCameraView=(CameraBridgeViewBase) findViewById(R.id.frame_Surface);
         mOpenCvCameraView.setCameraIndex(1);
@@ -168,8 +181,6 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         // FICAR EL TEXT QUE VOLGUEM MOSTRAR
         final TextView helloTextView = findViewById(R.id.toShowText);
 
-
-
         Rect largest_rect = modelService.detectBiggestFace(mGray);
         if (largest_rect == null){
             return mGray;
@@ -177,7 +188,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
             Mat croppedGray = modelService.cropToRect(mGray, largest_rect);
             Imgproc.rectangle(mRgba, largest_rect.tl(), largest_rect.br(), new Scalar(255,0,0), 4);
             Imgproc.rectangle(mGray, largest_rect.tl(), largest_rect.br(), new Scalar(255,0,0), 4);
-            if (Math.abs(new Date().getTime() - lastPicture.getTime()) < 3000){
+            if (Math.abs(lastPicture.getTime() - new Date().getTime()) < 3000){
                 return mRgba;
             }
             try {
