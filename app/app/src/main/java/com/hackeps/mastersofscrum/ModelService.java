@@ -63,7 +63,8 @@ public class ModelService {
     }
 
     public String sendCropped(Mat input) throws IOException {
-        URL url = new URL("https://e629-193-144-12-226.eu.ngrok.io/api/emotions");
+        // TODO Url ngrok
+        URL url = new URL("https://d525-193-144-12-226.eu.ngrok.io/api/emotions");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");

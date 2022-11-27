@@ -119,7 +119,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         });
 
         mOpenCvCameraView=(CameraBridgeViewBase) findViewById(R.id.frame_Surface);
-        mOpenCvCameraView.setCameraIndex(1);
+        //mOpenCvCameraView.setCameraIndex(1);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         /*
