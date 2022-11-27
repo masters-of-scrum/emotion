@@ -33,7 +33,7 @@ public class ModelService {
 
     public String recogniseFaces(Mat input) throws IOException {
         // TODO Ficar URL correcta
-        URL url = new URL("http://192.168.42.64:8080/");
+        URL url = new URL("https://9ae2-193-144-12-226.eu.ngrok.io/");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
@@ -63,7 +63,7 @@ public class ModelService {
     }
 
     public String sendCropped(Mat input) throws IOException {
-        URL url = new URL("http://192.168.42.64:8080/");
+        URL url = new URL("https://9ae2-193-144-12-226.eu.ngrok.io/api/emotions");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");

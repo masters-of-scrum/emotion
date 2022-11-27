@@ -22,6 +22,8 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
@@ -168,15 +170,18 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
             return mGray;
         } else {
             Mat croppedGray = modelService.cropToRect(mGray, largest_rect);
-            Mat croppedRgba = modelService.cropToRect(mRgba, largest_rect);
+            Imgproc.rectangle(mRgba, largest_rect.tl(), largest_rect.br(), new Scalar(255,0,0), 4);
+            Imgproc.rectangle(mGray, largest_rect.tl(), largest_rect.br(), new Scalar(255,0,0), 4);
+            //Mat croppedRgba = modelService.cropToRect(mRgba, largest_rect);
             try {
                 String result = modelService.sendCropped(croppedGray);
                 helloTextView.setText(result);
             } catch (IOException e) {
                 helloTextView.setText("REQUEST FAILED");
                 e.printStackTrace();
+                return mGray;
             }
-            return modelService.resizeImageBig(croppedRgba);
+            return mRgba;
         }
     }
 
