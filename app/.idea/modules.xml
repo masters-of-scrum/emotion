@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MastersOfScrum.iml" filepath="$PROJECT_DIR$/.idea/modules/MastersOfScrum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.iml" filepath="$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.main.iml" filepath="$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/OpenCV/MastersOfScrum.OpenCV.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ZenboSDK/MastersOfScrum.ZenboSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/ZenboSDK/MastersOfScrum.ZenboSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MastersOfScrum.app.unitTest.iml" />
+    </modules>
+  </component>
+</project>

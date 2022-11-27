@@ -29,8 +29,8 @@ class AllowedEmotion(Enum):
 
 class ModelCheck():
     def __init__(self):
-        self.modelo_json_file='./model_data/model_data.json'
-        self.modelo_weights_file='./model_data/model_weights.h5'
+        self.modelo_json_file='./resources/model_data/model_data.json'
+        self.modelo_weights_file='./resources/model_data/model_weights.h5'
         self.text_list=["Enfadat", "Disgustat", "Por", "Content", "Neutral", "Trist", "Sorpres"]
 
     def get_result_model(self,roi):
@@ -38,10 +38,13 @@ class ModelCheck():
             self.loaded_model_json=json_file.read()
             loaded_model= model_from_json(self.loaded_model_json)
             loaded_model.load_weights(self.modelo_weights_file)
+
+            img = np.array([float(x) for x in roi.split(',')]).reshape(48,48);
+
             pred=loaded_model.predict(roi[np.newaxis, :,:, np.newaxis])
             text_idx=np.argmax(pred)
             return self.text_list[text_idx]
-            
+
 
 
 class EmotionsApi(Resource):
@@ -61,10 +64,6 @@ class EmotionsApi(Resource):
         Given a valid string in the body request, creates a new emotion record in the db
         """
         body = request.get_json()
-        self.modelo.get_result_model(body)
+        result = self.modelo.get_result_model(body['image'])
 
-        return Response('Bad request', status=400)
-
-
-
-
+        return Response(result, mimetype="application/json", status=201)
