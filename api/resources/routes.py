@@ -1,7 +1,7 @@
 """
 Utility file that allows for API route initialization
 """
-from emotions import EmotionsApi
+from .emotions import EmotionsApi
 
 
 def initialize_routes(api):

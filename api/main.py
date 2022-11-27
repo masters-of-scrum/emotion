@@ -17,4 +17,4 @@ api = Api(app)
 
 if __name__ == "__main__":
     initialize_routes(api)
-    app.run()
+    app.run(port=80)
