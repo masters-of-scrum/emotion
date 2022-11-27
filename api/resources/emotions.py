@@ -23,6 +23,9 @@ class ModelCheck():
         self.text_list=["Enfadat", "Disgustat", "Por", "Content", "Neutral", "Trist", "Sorpres"]
 
     def get_result_model(self,roi):
+        """
+        Takes the image and feeds it to the model
+        """
         with open(self.modelo_json_file, "r") as json_file:
             self.loaded_model_json=json_file.read()
             loaded_model= model_from_json(self.loaded_model_json )
