@@ -44,6 +44,8 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
     File caseFile;
     //private facialRecognition facialRecognition;
 
+    Date lastPicture;
+
     private ModelService modelService;
 
     private BaseLoaderCallback mLoaderCallback =new BaseLoaderCallback(this) {
@@ -51,6 +53,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         public void onManagerConnected(int status) {
             if (status == LoaderCallbackInterface
                     .SUCCESS) {
+                lastPicture = new Date();
                 InputStream is = getResources().openRawResource(R.raw.haarcascade_frontalface_alt);
                 File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
                 caseFile = new File(cascadeDir, "haarcascade_frontalface_alt.xml");
@@ -165,6 +168,8 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         // FICAR EL TEXT QUE VOLGUEM MOSTRAR
         final TextView helloTextView = findViewById(R.id.toShowText);
 
+
+
         Rect largest_rect = modelService.detectBiggestFace(mGray);
         if (largest_rect == null){
             return mGray;
@@ -172,7 +177,9 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
             Mat croppedGray = modelService.cropToRect(mGray, largest_rect);
             Imgproc.rectangle(mRgba, largest_rect.tl(), largest_rect.br(), new Scalar(255,0,0), 4);
             Imgproc.rectangle(mGray, largest_rect.tl(), largest_rect.br(), new Scalar(255,0,0), 4);
-            //Mat croppedRgba = modelService.cropToRect(mRgba, largest_rect);
+            if (Math.abs(new Date().getTime() - lastPicture.getTime()) < 3000){
+                return mRgba;
+            }
             try {
                 String result = modelService.sendCropped(croppedGray);
                 result = result.replace("\n","");
@@ -180,9 +187,11 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
                 helloTextView.setText(result);
             } catch (IOException e) {
                 helloTextView.setText("REQUEST FAILED");
+                lastPicture = new Date();
                 e.printStackTrace();
                 return mGray;
             }
+            lastPicture = new Date();
             return mRgba;
         }
     }
