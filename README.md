@@ -1,6 +1,8 @@
 # emotion
 Implementació del repte proposat per l'empresa Saltó a la HackEPS2022
 
+# IMPORTANT: El que funciona és la branca "android"
+
 # Documentació
 
 ## Data sets
